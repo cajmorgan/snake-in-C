@@ -1,0 +1,1 @@
+void timerFunc(int speed);
