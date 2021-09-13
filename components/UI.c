@@ -2,6 +2,7 @@
 #include "UI.h"
 
 
+
 WINDOW *drawWindow(float windowSize) {
   WINDOW *gameWin;
   int width, height, startY, startX;

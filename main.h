@@ -1,3 +1,3 @@
 #include "./components/player.c"
 
-void gameLoop(snake *snakePlayer, WINDOW *gameWin);
+void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize);
