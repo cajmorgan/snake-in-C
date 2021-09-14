@@ -13,7 +13,7 @@
  * Extreme: 1
  */
 void timerFunc(int speed) {
-  speed = speed * 100000000;
+  speed = speed * 50000000;
   clock_t start = clock();
   volatile unsigned sink;
 

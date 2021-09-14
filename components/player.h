@@ -13,6 +13,7 @@ typedef struct player {
 } snake;
 
 
+snake *createPlayer(WINDOW *gameWin);
 void drawPlayer(snake *snakePlayer, WINDOW *gameWin);
 void removePlayer(snake *snakePlayer, WINDOW *gameWin);
 snake *createTail(snake *snakePlayer);

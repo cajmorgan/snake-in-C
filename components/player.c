@@ -1,27 +1,26 @@
 #include <ncurses.h>
-#include "player.h"
 #include <stdbool.h>
+#include "player.h"
 
 #define HEADCOLOR 1
 #define TAILCOLOR 2
 
 
-snake *createPlayer() {
+snake *createPlayer(WINDOW *gameWin) {
   snake *snakePlayer = NULL;
-    snakePlayer = (snake *)malloc(sizeof(snake));
-    if(snakePlayer == NULL)
-      return NULL;
+  int height, width;
+  snakePlayer = (snake *)malloc(sizeof(snake));
+  if(snakePlayer == NULL)
+    return NULL;
+
+  getmaxyx(gameWin, height, width);
   
   snakePlayer->head = true;
-  snakePlayer->posX = 40;
-  snakePlayer->posY = 20;
+  snakePlayer->posX = width / 2;
+  snakePlayer->posY = height / 2;
   snakePlayer->score = 0;
   snakePlayer->next = NULL;
   snakePlayer->prev = NULL;
-
-  // snakePlayer->next->posX = 41;
-  // snakePlayer->next->posY = 21;
-  // snakePlayer->next->prev = snakePlayer;
 
   return snakePlayer;
 }
@@ -32,11 +31,14 @@ void drawPlayer(snake *snakePlayer, WINDOW *gameWin) {
   while(current != NULL) {
     if(current->head == true) {
       wattrset(gameWin, COLOR_PAIR(HEADCOLOR));
-      mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
+      wattron(gameWin, A_BOLD);
+      mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
+      // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
       wattroff(gameWin, COLOR_PAIR(HEADCOLOR));
     } else {
       wattrset(gameWin, COLOR_PAIR(TAILCOLOR));
-      mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
+      mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
+      // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
       wattroff(gameWin, COLOR_PAIR(TAILCOLOR));
     }
     current = current->next;

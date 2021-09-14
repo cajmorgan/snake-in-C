@@ -4,14 +4,11 @@
 #include <time.h>
 #include <stdbool.h>
 #include "main.h"
-#include "./components/UI.c"
-#include "./components/mechanism.c"
-
 
 
 
 int main() {
-
+  srand(time(NULL));
   float windowSize = 1;
   WINDOW *gameWin;
   int test = 0;
@@ -26,8 +23,9 @@ int main() {
   //colors
   start_color();
   init_pair(10, COLOR_WHITE, COLOR_BLACK);
-  init_pair(HEADCOLOR, COLOR_GREEN, COLOR_BLACK);
-  init_pair(TAILCOLOR, COLOR_WHITE, COLOR_BLACK);
+  init_pair(HEADCOLOR, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(TAILCOLOR, COLOR_GREEN, COLOR_BLACK);
+  init_pair(FOODCOLOR, COLOR_MAGENTA, COLOR_BLACK);
   bkgd(COLOR_PAIR(10));
   curs_set(0);
   refresh();
@@ -36,24 +34,24 @@ int main() {
   //UI
   gameWin = drawWindow(windowSize);
   
-
-
   //Player
-  snake *snakePlayer = createPlayer();
+  snake *snakePlayer = createPlayer(gameWin);
   drawPlayer(snakePlayer, gameWin);
 
+  //Items
+  items *powerups = initiateItems(gameWin, snakePlayer);
+  drawItems(powerups, gameWin);
+
   //Game Loop
-  gameLoop(snakePlayer, gameWin, windowSize);
+  gameLoop(snakePlayer, gameWin, windowSize, powerups);
 
   getch();
   
 }
 
-
-
-void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
+void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powerups) {
   int direction = 1;
-  int speed = 1;
+  int speed = 3;
   int keyDown;
   int height, width;
   bool createNewTail = false;
@@ -87,7 +85,10 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
       case KEY_LEFT:
         if(direction != 2)
           direction = 4;
-        break;  
+        break;
+      case ' ':
+        createTail(snakePlayer);
+        break;
     }
     switch(direction) {
       case 1:
@@ -102,6 +103,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
         
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer);
+        powerups = useItemIfPos(snakePlayer, powerups);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -115,9 +117,9 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
           snakePlayer->posX += 2;
         }
 
-        createTail(snakePlayer);
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer);
+        powerups = useItemIfPos(snakePlayer, powerups);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -133,6 +135,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
 
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer);
+        powerups = useItemIfPos(snakePlayer, powerups);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -148,6 +151,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize) {
 
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer);
+        powerups = useItemIfPos(snakePlayer, powerups);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
