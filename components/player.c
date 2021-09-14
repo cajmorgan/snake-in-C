@@ -115,5 +115,3 @@ snake *selfBite(snake *snakePlayer) {
 
   return snakePlayer;
 }
-
-void removeTail();

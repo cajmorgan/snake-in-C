@@ -9,7 +9,7 @@
 
 int main() {
   srand(time(NULL));
-  float windowSize = 1;
+  float windowSize = 0.8;
   WINDOW *gameWin;
   int test = 0;
   scanf("%d", &test);
@@ -23,6 +23,7 @@ int main() {
   //colors
   start_color();
   init_pair(10, COLOR_WHITE, COLOR_BLACK);
+  init_pair(11, COLOR_WHITE, COLOR_BLACK);
   init_pair(HEADCOLOR, COLOR_YELLOW, COLOR_BLACK);
   init_pair(TAILCOLOR, COLOR_GREEN, COLOR_BLACK);
   init_pair(FOODCOLOR, COLOR_MAGENTA, COLOR_BLACK);

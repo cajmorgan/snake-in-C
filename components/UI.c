@@ -15,6 +15,7 @@ WINDOW *drawWindow(float windowSize) {
 
   gameWin = newwin(height, width, startY, startX);
   wborder(gameWin, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+  wbkgd(gameWin, COLOR_PAIR(11));
   wrefresh(gameWin);
   
   return gameWin;

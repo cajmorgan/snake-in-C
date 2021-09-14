@@ -19,15 +19,25 @@ items *initiateItems(WINDOW *gameWin, snake *snakePlayer) {
 }
 
 int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer) {
-  int width, height;
+  int width, height, random;
   getmaxyx(gameWin, height, width);
 
   //Implement random with modulus remainder of height/width, 
   // should probably check position of player as well
   if(isWhat == 'x') {
-    return 36;
+    random = (rand() % width) + 1;
+    if(random > width || random % 2 != 0) {
+      random = random - 1;
+    }
+
+    return random;
   } else if (isWhat == 'y') {
-    return 20;
+    random = (rand() % height) + 2;
+    if(random > height) {
+      random = random - 4;
+    }
+    
+    return random;
   }
 
   return 0;
