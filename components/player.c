@@ -13,7 +13,7 @@ snake *createPlayer(WINDOW *gameWin) {
   if(snakePlayer == NULL)
     return NULL;
 
-  getmaxyx(gameWin, height, width);
+  getmaxyx(stdscr, height, width);
   
   snakePlayer->head = true;
   snakePlayer->posX = width / 2;
@@ -98,16 +98,17 @@ bool checkTail(snake *snakePlayer, bool createNewTail) {
   return createNewTail;
 }
 
-snake *selfBite(snake *snakePlayer) {
+snake *selfBite(snake *snakePlayer, bool *gameOver) {
   snake *tail = snakePlayer;
 
   while(tail->next != NULL) {
     if(snakePlayer->posX == tail->next->posX && snakePlayer->posY == tail->next->posY) {
-      if(tail->next->next != NULL) {
-         tail->next->next = NULL;
-         free(tail->next->next);
-      }
-     
+      *gameOver = true;
+      //If you want to eat your tail instead:
+      // if(tail->next->next != NULL) {
+      //    tail->next->next = NULL;
+      //    free(tail->next->next);
+      // }
       break;
     } 
     tail = tail->next;

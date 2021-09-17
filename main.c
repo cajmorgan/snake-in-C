@@ -4,12 +4,11 @@
 #include <time.h>
 #include <stdbool.h>
 #include "main.h"
-
-
+#include <pthread.h>
 
 int main() {
   srand(time(NULL));
-  float windowSize = 0.8;
+  float windowSize = 1;
   WINDOW *gameWin;
   int test = 0;
   scanf("%d", &test);
@@ -40,7 +39,11 @@ int main() {
   drawPlayer(snakePlayer, gameWin);
 
   //Items
-  items *powerups = initiateItems(gameWin, snakePlayer);
+  items *powerups = initiateItems(gameWin, snakePlayer, windowSize);
+  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
+  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
+  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
+  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
   drawItems(powerups, gameWin);
 
   //Game Loop
@@ -52,20 +55,30 @@ int main() {
 
 void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powerups) {
   int direction = 1;
-  int speed = 3;
+  int *speed, speedTimer;
+  int *itemSpawner, itemSpawnerCounter;
   int keyDown;
   int height, width;
+  bool *gameOver;
   bool createNewTail = false;
   createNewTail = true;
+
+  speed = (int *)malloc(sizeof(int));
+  itemSpawner = (int *)malloc(sizeof(int));
+  gameOver = (bool *)malloc(sizeof(bool));
+  *speed = 3;
+  *itemSpawner = (rand() % 5) + 5; 
+  itemSpawnerCounter = 0;
+  speedTimer = 0;
+  *gameOver = false;
 
   //Enable keys
   keypad(gameWin, TRUE);
   nodelay(gameWin, TRUE);
  
-
   while(1) {
     getmaxyx(gameWin, height, width);
-    timerFunc(speed);
+    timerFunc(*speed);
 
     //Direction
     keyDown = wgetch(gameWin);
@@ -103,8 +116,8 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
         
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer);
-        powerups = useItemIfPos(snakePlayer, powerups);
+        snakePlayer = selfBite(snakePlayer, gameOver);
+        powerups = useItemIfPos(snakePlayer, powerups, speed);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -119,8 +132,8 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer);
-        powerups = useItemIfPos(snakePlayer, powerups);
+        snakePlayer = selfBite(snakePlayer, gameOver);
+        powerups = useItemIfPos(snakePlayer, powerups, speed);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -135,8 +148,8 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer);
-        powerups = useItemIfPos(snakePlayer, powerups);
+        snakePlayer = selfBite(snakePlayer, gameOver);
+        powerups = useItemIfPos(snakePlayer, powerups, speed);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -151,12 +164,35 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer);
-        powerups = useItemIfPos(snakePlayer, powerups);
+        snakePlayer = selfBite(snakePlayer, gameOver);
+        powerups = useItemIfPos(snakePlayer, powerups, speed);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
     }
-    refresh();
+
+    //Item spawner
+    // if(*itemSpawner == itemSpawnerCounter) {
+    //   randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
+    //   itemSpawnerCounter = 0;
+    //   *itemSpawner = (rand() % 5) + 10; 
+    // } else {
+    //   itemSpawnerCounter += 1;
+    // }
+
+    //FX timers
+    if(*speed == 1 && speedTimer != 150) {
+      speedTimer += 1;
+    } else {
+      *speed = 3;
+      speedTimer = 0;
+    }
+
+    if(*gameOver == true) {
+      printw("GAME OVER");
+      refresh();
+      break;
+    }
+    refresh();    
   } 
 }

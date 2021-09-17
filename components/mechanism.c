@@ -1,5 +1,5 @@
 #include <time.h>
-
+#include <pthread.h>
 
 
 
@@ -12,6 +12,8 @@
  * Very-Fast: 3
  * Extreme: 1
  */
+
+int ex = 1;
 void timerFunc(int speed) {
   speed = speed * 50000000;
   clock_t start = clock();
@@ -22,4 +24,9 @@ void timerFunc(int speed) {
   }
 
   clock_t end = clock();
+}
+
+
+void changeSpeed(int *speed, int newSpeed) {
+  *speed = newSpeed;
 }

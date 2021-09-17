@@ -20,4 +20,4 @@ snake *createTail(snake *snakePlayer);
 void updatePlayer(snake *snakePlayer);
 void updatePrev(snake *snakePlayer);
 bool checkTail(snake *snakePlayer, bool createNewTail);
-snake *selfBite(snake *snakePlayer);
+snake *selfBite(snake *snakePlayer, bool *gameOver);
