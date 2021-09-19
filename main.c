@@ -41,9 +41,6 @@ int main() {
   //Items
   items *powerups = initiateItems(gameWin, snakePlayer, windowSize);
   randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
-  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
-  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
-  randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
   drawItems(powerups, gameWin);
 
   //Game Loop
@@ -75,6 +72,9 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
   //Enable keys
   keypad(gameWin, TRUE);
   nodelay(gameWin, TRUE);
+
+  windowSize = 0.4;
+  gameWin = changeWindowSize(gameWin, windowSize);
  
   while(1) {
     getmaxyx(gameWin, height, width);
@@ -117,7 +117,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -133,7 +133,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
 
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -149,7 +149,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
 
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
@@ -165,20 +165,20 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
 
         createNewTail = checkTail(snakePlayer, createNewTail);
         snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer);
         updatePlayer(snakePlayer);
         drawPlayer(snakePlayer, gameWin);
         break;
     }
 
     //Item spawner
-    // if(*itemSpawner == itemSpawnerCounter) {
-    //   randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
-    //   itemSpawnerCounter = 0;
-    //   *itemSpawner = (rand() % 5) + 10; 
-    // } else {
-    //   itemSpawnerCounter += 1;
-    // }
+    if(*itemSpawner == itemSpawnerCounter) {
+      randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
+      itemSpawnerCounter = 0;
+      *itemSpawner = (rand() % 5) + 5; 
+    } else {
+      itemSpawnerCounter += 1;
+    }
 
     //FX timers
     if(*speed == 1 && speedTimer != 150) {

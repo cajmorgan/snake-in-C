@@ -20,3 +20,19 @@ WINDOW *drawWindow(float windowSize) {
   
   return gameWin;
 }
+
+WINDOW *changeWindowSize(WINDOW *gameWin, float windowSize) {
+  int height, width, startX, startY;
+  getmaxyx(gameWin, height, width);
+  getmaxyx(stdscr, startY, startX);
+  wclear(gameWin);
+  wrefresh(gameWin);
+  wresize(gameWin, height * windowSize, width * windowSize);
+  startX = ((startX - (startX * windowSize)) / 2);
+  startY = ((startY - (startY * windowSize)) / 2);
+  mvwin(gameWin, startY, startX);
+  wborder(gameWin, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+  wrefresh(gameWin);
+
+  return gameWin;
+}

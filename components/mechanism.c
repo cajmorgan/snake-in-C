@@ -27,6 +27,7 @@ void timerFunc(int speed) {
 }
 
 
-void changeSpeed(int *speed, int newSpeed) {
+void changeSpeed(int *speed, int newSpeed, int *speedTimer) {
   *speed = newSpeed;
+  *speedTimer = 0;
 }

@@ -21,8 +21,8 @@ items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) {
 int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSize) {
   int width, height, random, widthReduced, heightReduced;
   getmaxyx(stdscr, height, width);
-  widthReduced = width * winSize;
-  heightReduced = height * winSize;
+  widthReduced = (width * winSize) - 2;
+  heightReduced = (height * winSize) - 2;
   //Implement random with modulus remainder of height/width, 
   // should probably check position of player as well
 
@@ -30,23 +30,19 @@ int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSiz
     random = (rand() % widthReduced);
     if(random % 2 != 0) {
       random = random - 1;
-    } 
-
-    if(random == (width - widthReduced)) {
-      random += 4;
-    } else if (random == widthReduced) {
-      random -= 4;
     }
+    
+    if(random == 0) {
+      random += 2;
+    }
+
     return random;
   } else if (isWhat == 'y') {
     random = (rand() % heightReduced);
-    
-    if(random == (height - heightReduced)) {
-      random += 4;
-    } else if (random == heightReduced) {
-      random -= 4;
+    if(random == 0) {
+      random += 2;
     }
-    
+
     return random;
   }
 
@@ -69,7 +65,7 @@ int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSiz
  */
 
 
-items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed) {
+items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gameWin, float winSize, int *speedTimer) {
   items *currentItem = powerups;
   while(currentItem != NULL) {
     if(currentItem->posX == snakePlayer->posX && currentItem->posY == snakePlayer->posY) {
@@ -78,10 +74,10 @@ items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed) {
           createTail(snakePlayer);
           break;
         case 1:
-          changeSpeed(speed, 1);
+          changeSpeed(speed, 1, speedTimer);
           break;
       }
-      powerups = removeItemByPos(&powerups, currentItem);
+      powerups = removeItemByPos(&powerups, currentItem, gameWin, snakePlayer, winSize);
       break;
     }
     currentItem = currentItem->next;
@@ -104,12 +100,17 @@ void addItem(items *powerups, int item, WINDOW *gameWin, snake *snakePlayer, flo
   current->next->next = NULL;
 }
 
-items *removeItemByPos(items **powerups, items *itemToRemove) {
+items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, snake *snakePlayer, float winSize) {
   items *current, *second;
 
   current = *powerups;
   second = (*powerups)->next;
   if(current->posX == itemToRemove->posX && current->posY == itemToRemove->posY) {
+    if(current->next == NULL) {
+      addItem(*powerups, 0, gameWin, snakePlayer, winSize);
+      second = (*powerups)->next;
+      drawItems(*powerups, gameWin);
+    }
     *powerups = NULL;
     free(*powerups);
     *powerups = second;
