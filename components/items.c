@@ -3,6 +3,7 @@
 
 
 #define FOODCOLOR 3
+#define SLOWMOCOLOR 4
 
 items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) {
   items *powerups = NULL;
@@ -56,10 +57,10 @@ int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSiz
  * Go-through  
  * make window larger
  * make window smaller
- * Slowmotion
+ * Slowmotion 
  * Invert Controls
- * Invisibility
- * Nuke
+ * Invisibility - Blinking snake
+ * Nuke - Delete all items
  * 
  * For timing the powerups that are continuos, try create a new thread
  */
@@ -72,9 +73,23 @@ items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gam
       switch(currentItem->item) {
         case 0:
           createTail(snakePlayer);
+          snakePlayer->score += 1;
           break;
         case 1:
+          createTail(snakePlayer);
+          snakePlayer->score += 1;
+          break;
+        case 2:
+          createTail(snakePlayer);
+          snakePlayer->score += 1;
+          break;
+        case 3:
+          //Superspeed
           changeSpeed(speed, 1, speedTimer);
+          break;
+        case 4:
+          //Slowmotion
+          changeSpeed(speed, 7, speedTimer);
           break;
       }
       powerups = removeItemByPos(&powerups, currentItem, gameWin, snakePlayer, winSize);
@@ -156,8 +171,21 @@ void drawItems(items *powerups, WINDOW *gameWin) {
         mvwprintw(gameWin, current->posY, current->posX, "%c", '^');
         break;
       case 1:
+        wattron(gameWin, COLOR_PAIR(FOODCOLOR));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", '^');
+        break;
+      case 2:
+        wattron(gameWin, COLOR_PAIR(FOODCOLOR));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", '^');
+        break;
+      case 3:
         wattron(gameWin, A_BOLD);
         wattron(gameWin, COLOR_PAIR(1));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", 'S');
+        break;
+      case 4:
+        wattron(gameWin, A_BOLD);
+        wattron(gameWin, COLOR_PAIR(SLOWMOCOLOR));
         mvwprintw(gameWin, current->posY, current->posX, "%c", 'S');
         break;
     }
@@ -167,7 +195,7 @@ void drawItems(items *powerups, WINDOW *gameWin) {
 }
 
 void randomItemSpawner(items *powerups, WINDOW *gameWin, snake *snakePlayer, float windowSize) {
-  int random = rand() % 2;
+  int random = rand() % 5;
   addItem(powerups, random, gameWin, snakePlayer, windowSize);
   drawItems(powerups, gameWin);
 }
