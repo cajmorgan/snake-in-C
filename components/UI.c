@@ -1,6 +1,10 @@
 #include <curses.h> 
 #include "UI.h"
 
+#define FOODCOLOR 3
+#define SLOWMOCOLOR 4
+#define NUKECOLOR 5
+#define INVISCOLOR 6
 
 void initColors() {
   start_color();
@@ -10,6 +14,8 @@ void initColors() {
   init_pair(TAILCOLOR, COLOR_GREEN, COLOR_BLACK);
   init_pair(FOODCOLOR, COLOR_MAGENTA, COLOR_BLACK);
   init_pair(SLOWMOCOLOR, COLOR_WHITE, COLOR_BLACK);
+  init_pair(NUKECOLOR, COLOR_RED, COLOR_BLACK);
+  init_pair(INVISCOLOR, COLOR_BLUE, COLOR_BLACK);
   init_pair(20, COLOR_YELLOW, COLOR_BLACK);
   init_pair(21, COLOR_CYAN, COLOR_BLACK);
   init_pair(22, COLOR_MAGENTA, COLOR_BLACK);

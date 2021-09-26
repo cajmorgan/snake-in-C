@@ -26,21 +26,30 @@ snake *createPlayer(WINDOW *gameWin) {
 }
 
 
-void drawPlayer(snake *snakePlayer, WINDOW *gameWin) {
+void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr) {
   snake *current = snakePlayer;
   while(current != NULL) {
-    if(current->head == true) {
-      wattrset(gameWin, COLOR_PAIR(HEADCOLOR));
-      wattron(gameWin, A_BOLD);
-      mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
-      // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
-      wattroff(gameWin, COLOR_PAIR(HEADCOLOR));
+    if(*invisPtr == false) {
+      if(current->head == true) {
+        wattrset(gameWin, COLOR_PAIR(HEADCOLOR));
+        wattron(gameWin, A_BOLD);
+        mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
+        // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
+        wattroff(gameWin, COLOR_PAIR(HEADCOLOR));
+      } else {
+        wattrset(gameWin, COLOR_PAIR(TAILCOLOR));
+        mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
+        // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
+        wattroff(gameWin, COLOR_PAIR(TAILCOLOR));
+      }
     } else {
-      wattrset(gameWin, COLOR_PAIR(TAILCOLOR));
-      mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
-      // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
-      wattroff(gameWin, COLOR_PAIR(TAILCOLOR));
+        wattrset(gameWin, COLOR_PAIR(6));
+        wattron(gameWin, A_BLINK);
+        mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
+        wattroff(gameWin, A_BLINK);
+        // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
     }
+   
     current = current->next;
     wrefresh(gameWin);
   }

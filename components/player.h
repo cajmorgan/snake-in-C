@@ -14,7 +14,7 @@ typedef struct player {
 
 
 snake *createPlayer(WINDOW *gameWin);
-void drawPlayer(snake *snakePlayer, WINDOW *gameWin);
+void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr);
 void removePlayer(snake *snakePlayer, WINDOW *gameWin);
 snake *createTail(snake *snakePlayer);
 void updatePlayer(snake *snakePlayer);

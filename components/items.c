@@ -2,8 +2,6 @@
 #include "items.h"
 
 
-#define FOODCOLOR 3
-#define SLOWMOCOLOR 4
 
 items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) {
   items *powerups = NULL;
@@ -66,7 +64,7 @@ int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSiz
  */
 
 
-items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gameWin, float winSize, int *speedTimer) {
+items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gameWin, float winSize, int *speedTimer, bool *invisPtr) {
   items *currentItem = powerups;
   while(currentItem != NULL) {
     if(currentItem->posX == snakePlayer->posX && currentItem->posY == snakePlayer->posY) {
@@ -90,6 +88,13 @@ items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gam
         case 4:
           //Slowmotion
           changeSpeed(speed, 7, speedTimer);
+          break;
+        case 5:
+          //Nuke
+          powerups = removeAllItems(powerups, gameWin);
+          break;
+        case 6:
+          *invisPtr = true;
           break;
       }
       powerups = removeItemByPos(&powerups, currentItem, gameWin, snakePlayer, winSize);
@@ -144,20 +149,44 @@ items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, s
           free(current->next);
           break;
         }
-        
-       
-        
+               
         break;
       }
+
       current = current->next;
       second = second->next;
-      
     }
   }
-  
 
   return *powerups;
 }
+
+items *removeAllItems(items *powerups, WINDOW *gameWin) {
+  items *current = powerups;
+ 
+  while(powerups->next != NULL) {
+    if(powerups->next->next == NULL) {
+      powerups->next = NULL;
+      free(powerups->next);
+    } else {
+      while(current->next->next != NULL) {
+      current = current->next;
+      if(current->next->next == NULL) {
+        current->next = NULL;
+        free(current->next);
+        current = powerups;
+      }
+    }
+    }
+   
+    
+  }
+  
+  wclear(gameWin);
+  drawItems(powerups, gameWin);
+  wborder(gameWin, ACS_VLINE, ACS_VLINE, ACS_HLINE, ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+  return powerups;
+} 
 
 void drawItems(items *powerups, WINDOW *gameWin) {
   items *current = powerups;
@@ -188,6 +217,22 @@ void drawItems(items *powerups, WINDOW *gameWin) {
         wattron(gameWin, COLOR_PAIR(SLOWMOCOLOR));
         mvwprintw(gameWin, current->posY, current->posX, "%c", 'S');
         break;
+      case 5:
+        wattron(gameWin, A_BOLD);
+        wattron(gameWin, A_BLINK);
+        wattron(gameWin, COLOR_PAIR(NUKECOLOR));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", 'X');
+        wattroff(gameWin, A_BLINK);
+        break;
+      case 6:
+        wattron(gameWin, A_BOLD);
+        wattron(gameWin, A_BLINK);
+        wattron(gameWin, COLOR_PAIR(INVISCOLOR));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", '@');
+        wattroff(gameWin, A_BLINK);
+        break;
+      
+
     }
     wrefresh(gameWin);
     current = current->next;
@@ -195,7 +240,7 @@ void drawItems(items *powerups, WINDOW *gameWin) {
 }
 
 void randomItemSpawner(items *powerups, WINDOW *gameWin, snake *snakePlayer, float windowSize) {
-  int random = rand() % 5;
+  int random = rand() % 7;
   addItem(powerups, random, gameWin, snakePlayer, windowSize);
   drawItems(powerups, gameWin);
 }

@@ -18,7 +18,7 @@
 
 int ex = 1;
 void timerFunc(int speed) {
-  speed = speed * 25000000;
+  speed = speed * 50000000;
   clock_t start = clock();
   volatile unsigned sink;
 
@@ -36,48 +36,47 @@ void changeSpeed(int *speed, int newSpeed, int *speedTimer) {
 
 void printHighsScores(char **scoreArr, int indexOfHighScore) {
   attrset(A_BOLD);
-  mvprintw(19, 36, "HIGH SCORES:");
+  mvprintw(15, 34, "HIGH SCORES:");
   for (int row = 0; row < 5; row++) {
     switch(row) {
       case 0:
         attron(COLOR_PAIR(20));
         if(indexOfHighScore == row)
           attron(A_BLINK);
-        mvprintw(21, 38, "%d. %s", (row + 1), scoreArr[row]);
+        mvprintw(17, 36, "%d. %s", (row + 1), scoreArr[row]);
         attroff(A_BLINK);
         break;
       case 1:
         attron(COLOR_PAIR(21));
         if(indexOfHighScore == row)
           attron(A_BLINK);
-        mvprintw(22, 38, "%d. %s", (row + 1), scoreArr[row]);
+        mvprintw(18, 36, "%d. %s", (row + 1), scoreArr[row]);
         attroff(A_BLINK);
         break;
       case 2:
         attron(COLOR_PAIR(22));
         if(indexOfHighScore == row)
           attron(A_BLINK);
-        mvprintw(23, 38, "%d. %s", (row + 1), scoreArr[row]);
+        mvprintw(19, 36, "%d. %s", (row + 1), scoreArr[row]);
         attroff(A_BLINK);
         break;
       case 3:
         attron(COLOR_PAIR(23));
         if(indexOfHighScore == row)
           attron(A_BLINK);
-        mvprintw(24, 38, "%d. %s", (row + 1), scoreArr[row]);
+        mvprintw(20, 36, "%d. %s", (row + 1), scoreArr[row]);
         attroff(A_BLINK);
         break;
       case 4:
         attron(COLOR_PAIR(24));
         if(indexOfHighScore == row)
           attron(A_BLINK);
-        mvprintw(25, 38, "%d. %s", (row + 1), scoreArr[row]);
+        mvprintw(21, 36, "%d. %s", (row + 1), scoreArr[row]);
         attroff(A_BLINK);
         break;
     }
   }
 
-  // free(scoreArr);
 }
  
 void createHighScoreFile() {
