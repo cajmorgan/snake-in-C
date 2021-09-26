@@ -1,6 +1,24 @@
 #include <curses.h> 
 #include "UI.h"
 
+
+void initColors() {
+  start_color();
+  init_pair(10, COLOR_WHITE, COLOR_BLACK);
+  init_pair(11, COLOR_WHITE, COLOR_BLACK);
+  init_pair(HEADCOLOR, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(TAILCOLOR, COLOR_GREEN, COLOR_BLACK);
+  init_pair(FOODCOLOR, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(SLOWMOCOLOR, COLOR_WHITE, COLOR_BLACK);
+  init_pair(20, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(21, COLOR_CYAN, COLOR_BLACK);
+  init_pair(22, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(23, COLOR_GREEN, COLOR_BLACK);
+  init_pair(24, COLOR_RED, COLOR_BLACK);
+
+  bkgd(COLOR_PAIR(10));
+}
+
 WINDOW *drawWindow(float windowSize) {
   WINDOW *gameWin;
   int width, height, startY, startX;

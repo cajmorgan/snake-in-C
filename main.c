@@ -17,14 +17,7 @@ int main() {
   resizeterm(40, 80);
   mvprintw(19, 29, "PRESS ANY KEY TO START");
   //colors
-  start_color();
-  init_pair(10, COLOR_WHITE, COLOR_BLACK);
-  init_pair(11, COLOR_WHITE, COLOR_BLACK);
-  init_pair(HEADCOLOR, COLOR_YELLOW, COLOR_BLACK);
-  init_pair(TAILCOLOR, COLOR_GREEN, COLOR_BLACK);
-  init_pair(FOODCOLOR, COLOR_MAGENTA, COLOR_BLACK);
-  init_pair(SLOWMOCOLOR, COLOR_WHITE, COLOR_BLACK);
-  bkgd(COLOR_PAIR(10));
+  initColors();
   curs_set(0);
   refresh();
 
@@ -44,12 +37,13 @@ int main() {
   //Game Loop
   gameLoop(snakePlayer, gameWin, windowSize, powerups);
 
-  //High score
+  getch();
+  // //High score
   createHighScoreFile();
   char **scoreArr = getHighScoresFromFile();
   checkIfHighScore(snakePlayer->score, scoreArr);
-
   getch();
+
   endwin();
   system("clear");
 }
