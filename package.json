@@ -1,5 +1,5 @@
 {
-  "name": "snake",
+  "name": "nodesnake",
   "version": "1.0.0",
   "description": "",
   "main": "snake.js",
@@ -14,8 +14,8 @@
     "type": "git",
     "url": "git+https://github.com/cajmorgan/snake-in-C.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Caj Morgan",
+  "license": "MIT",
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/cajmorgan/snake-in-C/issues"
