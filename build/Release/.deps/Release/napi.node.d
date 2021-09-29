@@ -1,0 +1,1 @@
+cmd_Release/napi.node := c++ -bundle -undefined dynamic_lookup -Wl,-no_pie -Wl,-search_paths_first -mmacosx-version-min=10.10 -arch x86_64 -L./Release -stdlib=libc++  -o Release/napi.node Release/obj.target/napi/src/napi.o -lncurses

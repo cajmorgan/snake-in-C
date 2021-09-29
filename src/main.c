@@ -5,7 +5,8 @@
 #include <stdbool.h>
 #include "main.h"
 
-int main() {
+int game() 
+{
   while(1) {
     srand(time(NULL));
     float windowSize = 1;
@@ -67,14 +68,17 @@ int main() {
   
 }
 
-void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powerups) {
+void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powerups) 
+{
   int direction = 1;
   int *speed, speedTimer, invisTimer;
+  int goThroughTimer;
   int *itemSpawner, itemSpawnerCounter;
   int keyDown;
   int height, width;
   bool *gameOver;
   bool *invisPtr;
+  bool *goThroughPtr;
   bool createNewTail = false;
   createNewTail = true;
 
@@ -82,11 +86,14 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
   itemSpawner = (int *)malloc(sizeof(int));
   gameOver = (bool *)malloc(sizeof(bool));
   invisPtr = (bool *)malloc(sizeof(bool));
+  goThroughPtr = (bool *)malloc(sizeof(bool));
   *speed = 3;
   *invisPtr = false;
   *itemSpawner = (rand() % 5) + 5; 
   itemSpawnerCounter = 0;
   speedTimer = 0;
+  invisTimer = 0;
+  goThroughTimer = 0;
   *gameOver = false;
 
   //Enable keys
@@ -121,9 +128,9 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         if(direction != 2)
           direction = 4;
         break;
-      case ' ':
-        createTail(snakePlayer);
-        break;
+      // case ' ':
+      //   createTail(snakePlayer);
+      //   break;
     }
     switch(direction) {
       case 1:
@@ -137,10 +144,10 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
         
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr);
+        snakePlayer = selfBite(snakePlayer, gameOver, goThroughPtr);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr, goThroughPtr);
         updatePlayer(snakePlayer);
-        drawPlayer(snakePlayer, gameWin, invisPtr);
+        drawPlayer(snakePlayer, gameWin, invisPtr, goThroughPtr);
         break;
       case 2:
         removePlayer(snakePlayer, gameWin);
@@ -153,10 +160,10 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr);
+        snakePlayer = selfBite(snakePlayer, gameOver, goThroughPtr);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr, goThroughPtr);
         updatePlayer(snakePlayer);
-        drawPlayer(snakePlayer, gameWin, invisPtr);
+        drawPlayer(snakePlayer, gameWin, invisPtr, goThroughPtr);
         break;
       case 3:
         removePlayer(snakePlayer, gameWin);
@@ -169,10 +176,10 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr);
+        snakePlayer = selfBite(snakePlayer, gameOver, goThroughPtr);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr, goThroughPtr);
         updatePlayer(snakePlayer);
-        drawPlayer(snakePlayer, gameWin, invisPtr);
+        drawPlayer(snakePlayer, gameWin, invisPtr, goThroughPtr);
         break;
       case 4:
         removePlayer(snakePlayer, gameWin);
@@ -185,10 +192,10 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
         }
 
         createNewTail = checkTail(snakePlayer, createNewTail);
-        snakePlayer = selfBite(snakePlayer, gameOver);
-        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr);
+        snakePlayer = selfBite(snakePlayer, gameOver, goThroughPtr);
+        powerups = useItemIfPos(snakePlayer, powerups, speed, gameWin, windowSize, &speedTimer, invisPtr, goThroughPtr);
         updatePlayer(snakePlayer);
-        drawPlayer(snakePlayer, gameWin, invisPtr);
+        drawPlayer(snakePlayer, gameWin, invisPtr, goThroughPtr);
         break;
     }
 
@@ -196,7 +203,7 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
     if(*itemSpawner == itemSpawnerCounter) {
       randomItemSpawner(powerups, gameWin, snakePlayer, windowSize);
       itemSpawnerCounter = 0;
-      *itemSpawner = (rand() % 5) + 5; 
+      *itemSpawner = (rand() % 5) + 20; 
     } else {
       itemSpawnerCounter += 1;
     }
@@ -216,6 +223,13 @@ void gameLoop(snake *snakePlayer, WINDOW *gameWin, float windowSize, items *powe
     } else {
       *invisPtr = false;
       invisTimer = 0;
+    }
+
+    if(*goThroughPtr == true && goThroughTimer != 60) {
+      goThroughTimer += 1;
+    } else {
+      *goThroughPtr = false;
+      goThroughTimer = 0;
     }
 
     if(*gameOver == true) {

@@ -14,10 +14,10 @@ typedef struct player {
 
 
 snake *createPlayer(WINDOW *gameWin);
-void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr);
+void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr, bool *goThroughPtr); 
 void removePlayer(snake *snakePlayer, WINDOW *gameWin);
 snake *createTail(snake *snakePlayer);
 void updatePlayer(snake *snakePlayer);
 void updatePrev(snake *snakePlayer);
 bool checkTail(snake *snakePlayer, bool createNewTail);
-snake *selfBite(snake *snakePlayer, bool *gameOver);
+snake *selfBite(snake *snakePlayer, bool *gameOver, bool *goThroughPtr);

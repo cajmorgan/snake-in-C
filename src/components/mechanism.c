@@ -4,37 +4,26 @@
 #include "mechanism.h"
 #include <math.h>
 
-
-
-
-/**
- * Speeds:
- * Slow: 12
- * Normal: 8
- * Fast: 5
- * Very-Fast: 3
- * Extreme: 1
- */
-
 int ex = 1;
-void timerFunc(int speed) {
+void timerFunc(int speed) 
+{
   speed = speed * 50000000;
-  clock_t start = clock();
-  volatile unsigned sink;
+  volatile unsigned sink = 0;
 
-  for(size_t i = 0; i < speed; i++) {
+  for(int i = 0; i < speed; i++) {
     sink++;
   }
 
-  clock_t end = clock();
 }
 
-void changeSpeed(int *speed, int newSpeed, int *speedTimer) {
+void changeSpeed(int *speed, int newSpeed, int *speedTimer) 
+{
   *speed = newSpeed;
   *speedTimer = 0;
 }
 
-void printHighsScores(char **scoreArr, int indexOfHighScore) {
+void printHighsScores(char **scoreArr, int indexOfHighScore) 
+{
   attrset(A_BOLD);
   mvprintw(15, 34, "HIGH SCORES:");
   for (int row = 0; row < 5; row++) {
@@ -78,8 +67,9 @@ void printHighsScores(char **scoreArr, int indexOfHighScore) {
   }
 
 }
- 
-void createHighScoreFile() {
+
+void createHighScoreFile() 
+{
   FILE *fp = fopen("./snake/scores.dat", "rb");
   if(fp == NULL) {
     system("mkdir ~/snake");
@@ -92,9 +82,8 @@ void createHighScoreFile() {
 
 }
 
-void updateHighScoreFile(int *scoreArr, int indexOfHighScore) {
-  //Convert scoreArr to correct format and replace filecontent with it: 0000\n0000\n0000\n0000\n0000
-  //Create dynamic 2D-Array
+void updateHighScoreFile(int *scoreArr, int indexOfHighScore) 
+{
   char **arr;
   FILE *fp;
   int column = 0, counter = 0;
@@ -174,12 +163,11 @@ void updateHighScoreFile(int *scoreArr, int indexOfHighScore) {
 
 }
 
-void checkIfHighScore(int playerScore, char **scoreArr) {
-  //Create function to convert every column to correct integer and put in new array
+void checkIfHighScore(int playerScore, char **scoreArr) 
+{
   int convertToInt, counter = 0, adder = 0;
   static int scoreArrIntegers[5];
 
-  //Convert previous scores to integers
   for (int row = 0; row < 5; row++) {
     for (int column = 0; column < 5; column++) {
         if(counter != 4) {
@@ -220,19 +208,20 @@ void checkIfHighScore(int playerScore, char **scoreArr) {
         replacement = previous;
         index += 1;
       }
-      
-      
+
+
       updateHighScoreFile(scoreArrIntegers, i);
       scoreArr = NULL;
       free(scoreArr);
       return;
-    } 
+    }
   }
 
   printHighsScores(scoreArr, -1);
 }
 
-char **getHighScoresFromFile() {
+char **getHighScoresFromFile() 
+{
   FILE *fp = fopen("./snake/scores.dat", "r");
 
   //Create dynamic 2D-Array

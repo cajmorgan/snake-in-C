@@ -6,7 +6,8 @@
 #define TAILCOLOR 2
 
 
-snake *createPlayer(WINDOW *gameWin) {
+snake *createPlayer(WINDOW *gameWin) 
+{
   snake *snakePlayer = NULL;
   int height, width;
   snakePlayer = (snake *)malloc(sizeof(snake));
@@ -26,10 +27,11 @@ snake *createPlayer(WINDOW *gameWin) {
 }
 
 
-void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr) {
+void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr, bool *goThroughPtr) 
+{
   snake *current = snakePlayer;
   while(current != NULL) {
-    if(*invisPtr == false) {
+    if(*invisPtr == false && *goThroughPtr == false) {
       if(current->head == true) {
         wattrset(gameWin, COLOR_PAIR(HEADCOLOR));
         wattron(gameWin, A_BOLD);
@@ -42,11 +44,15 @@ void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr) {
         // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
         wattroff(gameWin, COLOR_PAIR(TAILCOLOR));
       }
-    } else {
+    } else if(*invisPtr == true){
         wattrset(gameWin, COLOR_PAIR(6));
         wattron(gameWin, A_BLINK);
         mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
         wattroff(gameWin, A_BLINK);
+        // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
+    } else if(*goThroughPtr == true){
+        wattrset(gameWin, COLOR_PAIR(7));
+        mvwaddch(gameWin, current->posY, current->posX, ACS_DIAMOND);
         // mvwprintw(gameWin, current->posY, current->posX, "%c", '*');
     }
    
@@ -55,7 +61,8 @@ void drawPlayer(snake *snakePlayer, WINDOW *gameWin, bool *invisPtr) {
   }
 }
 
-void updatePlayer(snake *snakePlayer) {
+void updatePlayer(snake *snakePlayer) 
+{
   snake *current = snakePlayer;
 
   while(current->next != NULL) {
@@ -65,7 +72,8 @@ void updatePlayer(snake *snakePlayer) {
   }
 }
 
-void updatePrev(snake *snakePlayer) {
+void updatePrev(snake *snakePlayer) 
+{
   snake *current = snakePlayer;
   while(current != NULL) {
     current->prevY = current->posY;
@@ -74,7 +82,8 @@ void updatePrev(snake *snakePlayer) {
   }
 }
 
-void removePlayer(snake *snakePlayer, WINDOW *gameWin) {
+void removePlayer(snake *snakePlayer, WINDOW *gameWin) 
+{
   snake *current = snakePlayer;
   while(current != NULL) {
     mvwprintw(gameWin, current->posY, current->posX, "%c", ' ');
@@ -83,7 +92,8 @@ void removePlayer(snake *snakePlayer, WINDOW *gameWin) {
   }
 }
 
-snake *createTail(snake *snakePlayer) {
+snake *createTail(snake *snakePlayer) 
+{
   snake *tail = snakePlayer;
   while(tail->next != NULL) {
     tail = tail->next;
@@ -98,7 +108,8 @@ snake *createTail(snake *snakePlayer) {
   return snakePlayer;
 }
 
-bool checkTail(snake *snakePlayer, bool createNewTail) {
+bool checkTail(snake *snakePlayer, bool createNewTail) 
+{
   if(createNewTail == true) {
     snakePlayer = createTail(snakePlayer);
     createNewTail = false;
@@ -107,20 +118,23 @@ bool checkTail(snake *snakePlayer, bool createNewTail) {
   return createNewTail;
 }
 
-snake *selfBite(snake *snakePlayer, bool *gameOver) {
+snake *selfBite(snake *snakePlayer, bool *gameOver, bool *goThroughPtr) 
+{
   snake *tail = snakePlayer;
 
-  while(tail->next != NULL) {
-    if(snakePlayer->posX == tail->next->posX && snakePlayer->posY == tail->next->posY) {
-      *gameOver = true;
-      //If you want to eat your tail instead:
-      // if(tail->next->next != NULL) {
-      //    tail->next->next = NULL;
-      //    free(tail->next->next);
-      // }
-      break;
-    } 
-    tail = tail->next;
+  if(*goThroughPtr == false) {
+    while(tail->next != NULL) {
+      if(snakePlayer->posX == tail->next->posX && snakePlayer->posY == tail->next->posY) {
+        *gameOver = true;
+        //If you want to eat your tail instead:
+        // if(tail->next->next != NULL) {
+        //    tail->next->next = NULL;
+        //    free(tail->next->next);
+        // }
+        break;
+      } 
+      tail = tail->next;
+    }
   }
 
   return snakePlayer;

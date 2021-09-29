@@ -3,7 +3,8 @@
 
 
 
-items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) {
+items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) 
+{
   items *powerups = NULL;
   powerups = (items *)malloc(sizeof(items));
   if(powerups == NULL)
@@ -17,7 +18,8 @@ items *initiateItems(WINDOW *gameWin, snake *snakePlayer, float winSize) {
   return powerups;
 }
 
-int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSize) {
+int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSize) 
+{
   int width, height, random, widthReduced, heightReduced;
   getmaxyx(stdscr, height, width);
   widthReduced = (width * winSize) - 2;
@@ -64,7 +66,8 @@ int randomItemPos(char isWhat, WINDOW *gameWin, snake *snakePlayer, float winSiz
  */
 
 
-items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gameWin, float winSize, int *speedTimer, bool *invisPtr) {
+items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gameWin, float winSize, int *speedTimer, bool *invisPtr, bool *goThroughPtr) 
+{
   items *currentItem = powerups;
   while(currentItem != NULL) {
     if(currentItem->posX == snakePlayer->posX && currentItem->posY == snakePlayer->posY) {
@@ -96,6 +99,9 @@ items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gam
         case 6:
           *invisPtr = true;
           break;
+        case 7:
+          *goThroughPtr = true;
+          break;
       }
       powerups = removeItemByPos(&powerups, currentItem, gameWin, snakePlayer, winSize);
       break;
@@ -106,7 +112,8 @@ items *useItemIfPos(snake *snakePlayer, items *powerups, int *speed, WINDOW *gam
   return powerups;
 }
 
-void addItem(items *powerups, int item, WINDOW *gameWin, snake *snakePlayer, float winSize) {
+void addItem(items *powerups, int item, WINDOW *gameWin, snake *snakePlayer, float winSize) 
+{
   items *current = powerups;
 
   while(current->next != NULL) {
@@ -120,7 +127,8 @@ void addItem(items *powerups, int item, WINDOW *gameWin, snake *snakePlayer, flo
   current->next->next = NULL;
 }
 
-items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, snake *snakePlayer, float winSize) {
+items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, snake *snakePlayer, float winSize) 
+{
   items *current, *second;
 
   current = *powerups;
@@ -161,7 +169,8 @@ items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, s
   return *powerups;
 }
 
-items *removeAllItems(items *powerups, WINDOW *gameWin) {
+items *removeAllItems(items *powerups, WINDOW *gameWin) 
+{
   items *current = powerups;
  
   while(powerups->next != NULL) {
@@ -188,7 +197,8 @@ items *removeAllItems(items *powerups, WINDOW *gameWin) {
   return powerups;
 } 
 
-void drawItems(items *powerups, WINDOW *gameWin) {
+void drawItems(items *powerups, WINDOW *gameWin) 
+{
   items *current = powerups;
   wattrset(gameWin, A_BOLD);
 
@@ -231,16 +241,20 @@ void drawItems(items *powerups, WINDOW *gameWin) {
         mvwprintw(gameWin, current->posY, current->posX, "%c", '@');
         wattroff(gameWin, A_BLINK);
         break;
-      
-
+      case 7:
+        wattron(gameWin, A_BOLD);
+        wattron(gameWin, COLOR_PAIR(GOTHROUGHCOLOR));
+        mvwprintw(gameWin, current->posY, current->posX, "%c", '&');
+        break;
     }
     wrefresh(gameWin);
     current = current->next;
   }
 }
 
-void randomItemSpawner(items *powerups, WINDOW *gameWin, snake *snakePlayer, float windowSize) {
-  int random = rand() % 7;
+void randomItemSpawner(items *powerups, WINDOW *gameWin, snake *snakePlayer, float windowSize) 
+{
+  int random = rand() % 8;
   addItem(powerups, random, gameWin, snakePlayer, windowSize);
   drawItems(powerups, gameWin);
 }

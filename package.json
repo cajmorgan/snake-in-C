@@ -1,0 +1,24 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "description": "",
+  "main": "snake.js",
+  "bin": {
+    "playSnake": "./snake.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cajmorgan/snake-in-C.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/cajmorgan/snake-in-C/issues"
+  },
+  "homepage": "https://github.com/cajmorgan/snake-in-C#readme"
+}

@@ -5,6 +5,7 @@
 #define SLOWMOCOLOR 4
 #define NUKECOLOR 5
 #define INVISCOLOR 6
+#define GOTHROUGHCOLOR 7
 
 void initColors() {
   start_color();
@@ -16,6 +17,7 @@ void initColors() {
   init_pair(SLOWMOCOLOR, COLOR_WHITE, COLOR_BLACK);
   init_pair(NUKECOLOR, COLOR_RED, COLOR_BLACK);
   init_pair(INVISCOLOR, COLOR_BLUE, COLOR_BLACK);
+  init_pair(GOTHROUGHCOLOR, COLOR_CYAN, COLOR_BLACK);
   init_pair(20, COLOR_YELLOW, COLOR_BLACK);
   init_pair(21, COLOR_CYAN, COLOR_BLACK);
   init_pair(22, COLOR_MAGENTA, COLOR_BLACK);
@@ -25,7 +27,8 @@ void initColors() {
   bkgd(COLOR_PAIR(10));
 }
 
-WINDOW *drawWindow(float windowSize) {
+WINDOW *drawWindow(float windowSize) 
+{
   WINDOW *gameWin;
   int width, height, startY, startX;
   width = 80 * windowSize;
@@ -43,14 +46,16 @@ WINDOW *drawWindow(float windowSize) {
   return gameWin;
 }
 
-void printScore(int score) {
+void printScore(int score) 
+{
   int height, width;
   getmaxyx(stdscr, height, width);
   mvprintw(1, 35, "Score: %d", score);
   refresh();
 }
 
-WINDOW *changeWindowSize(WINDOW *gameWin, float windowSize) {
+WINDOW *changeWindowSize(WINDOW *gameWin, float windowSize) 
+{
   int height, width, startX, startY;
   getmaxyx(gameWin, height, width);
   getmaxyx(stdscr, startY, startX);
