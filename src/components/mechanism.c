@@ -211,8 +211,8 @@ void checkIfHighScore(int playerScore, char **scoreArr)
 
 
       updateHighScoreFile(scoreArrIntegers, i);
-      scoreArr = NULL;
       free(scoreArr);
+      scoreArr = NULL;
       return;
     }
   }

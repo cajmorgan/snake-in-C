@@ -139,22 +139,22 @@ items *removeItemByPos(items **powerups, items *itemToRemove, WINDOW *gameWin, s
       second = (*powerups)->next;
       drawItems(*powerups, gameWin);
     }
-    *powerups = NULL;
     free(*powerups);
+    *powerups = NULL;
     *powerups = second;
   } else {
     while(second != NULL) {
       if(current->next->posX == itemToRemove->posX && current->next->posY == itemToRemove->posY) {
         if(second->next != NULL) {
           second = second->next;
-          current->next = NULL;
           free(current->next);
+          current->next = NULL;
           current->next = second;
           second->next = current->next->next;
           break;
         } else if (second->next == NULL) {
-          current->next = NULL;
           free(current->next);
+          current->next = NULL;
           break;
         }
                
@@ -175,14 +175,14 @@ items *removeAllItems(items *powerups, WINDOW *gameWin)
  
   while(powerups->next != NULL) {
     if(powerups->next->next == NULL) {
-      powerups->next = NULL;
       free(powerups->next);
+      powerups->next = NULL;
     } else {
       while(current->next->next != NULL) {
       current = current->next;
       if(current->next->next == NULL) {
-        current->next = NULL;
         free(current->next);
+        current->next = NULL;
         current = powerups;
       }
     }
